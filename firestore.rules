@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Change this email if your admin account uses another one.
+    function isOwner() {
+      return request.auth != null && request.auth.token.email == 'palentweb@gmail.com';
+    }
+    function isSelf(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+    // Visitors write only their own visit, request and chat documents; only the admin reads them all.
+    match /visits/{uid}  { allow read: if isOwner() || isSelf(uid); allow write: if isSelf(uid); }
+    match /leads/{uid}   { allow read: if isOwner() || isSelf(uid); allow write: if isSelf(uid); }
+    match /chats/{uid}   { allow read: if isOwner() || isSelf(uid); allow write: if isSelf(uid); }
+    match /replies/{uid} { allow read: if isOwner() || isSelf(uid); allow write: if isOwner(); }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

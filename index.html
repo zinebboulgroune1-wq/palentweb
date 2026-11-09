@@ -7,6 +7,11 @@
 <meta name="theme-color" content="#0F172A">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20160%20160%22%3E%3Crect%20width%3D%22160%22%20height%3D%22160%22%20rx%3D%2236%22%20fill%3D%22%230F172A%22/%3E%3Crect%20x%3D%2252%22%20y%3D%2240%22%20width%3D%2220%22%20height%3D%2284%22%20rx%3D%224%22%20fill%3D%22%23fff%22/%3E%3Cpath%20d%3D%22M62%2050%20H92%20A24%2024%200%200%201%2092%2098%20H62%22%20fill%3D%22none%22%20stroke%3D%22%2322D3EE%22%20stroke-width%3D%2220%22/%3E%3Ccircle%20cx%3D%22134%22%20cy%3D%2252%22%20r%3D%229%22%20fill%3D%22%2322D3EE%22/%3E%3C/svg%3E">
 <style>body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="firebase-shim.js"></script>
 <title>palentweb</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2051,10 +2056,11 @@ async function adminSend(text){
 const ALS={mode:'login',rec:null,fails:0,lockUntil:0};
 const te=new TextEncoder(),b64=u=>btoa(String.fromCharCode(...new Uint8Array(u))),unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 async function pwHash(pw,salt,iter){const k=await crypto.subtle.importKey('raw',te.encode(pw),'PBKDF2',false,['deriveBits']);return b64(await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:unb64(salt),iterations:iter},k,256))}
-function admUnlocked(){try{return +sessionStorage.getItem('rukn-adm')>Date.now()}catch(e){return false}}
+function admUnlocked(){if(window.FB_MODE)return !!LIVE.owner;try{return +sessionStorage.getItem('rukn-adm')>Date.now()}catch(e){return false}}
 function admSetSession(on){try{on?sessionStorage.setItem('rukn-adm',String(Date.now()+30*60e3)):sessionStorage.removeItem('rukn-adm')}catch(e){}}
 async function openAdmin(){
   if(admUnlocked())return showAdminPanel();
+  if(window.FB_MODE)return fbLoginDialog();
   const d=$('#admLogin');$('#alErr').hidden=true;$('#alPass').value='';$('#alPass2').value='';
   try{const s=await LIVE.db.doc('secure/admin').get();ALS.rec=s.exists?s.data():null}catch(e){ALS.rec=null}
   ALS.mode=ALS.rec?'login':'setup';
@@ -2066,7 +2072,22 @@ async function openAdmin(){
   if(d.showModal){try{d.showModal()}catch(e){d.setAttribute('open','')}}else d.setAttribute('open','');
   setTimeout(()=>$('#alEmail').focus(),30);
 }
+function fbLoginDialog(){
+  const d=$('#admLogin');ALS.mode='fb';$('#alErr').hidden=true;$('#alPass').value='';$('#alConfRow').hidden=true;$('#alPass').autocomplete='current-password';
+  $('#alT').textContent=L('تسجيل الدخول إلى لوحة التحكم','Log in to the admin panel');
+  $('#alP').textContent=L('أدخل بريد المدير وكلمة المرور التي أنشأتها في Firebase.','Enter the admin email and the password you created in Firebase.');
+  $('#alGo').textContent=L('دخول','Log in');
+  $('#alNote').textContent=L('نسيت كلمة المرور؟ غيّرها من Firebase: Authentication ← Users.','Forgot your password? Reset it in Firebase: Authentication → Users.');
+  if(d.showModal){try{d.showModal()}catch(e){d.setAttribute('open','')}}else d.setAttribute('open','');
+  setTimeout(()=>$('#alEmail').focus(),30);
+}
 async function alSubmit(){
+  if(ALS.mode==='fb'){const em=$('#alEmail').value.trim(),pw=$('#alPass').value,err=m=>{$('#alErr').hidden=false;$('#alErr').textContent=m};
+    if(!em||!pw)return err(L('أدخل البريد وكلمة المرور.','Enter your email and password.'));
+    $('#alGo').disabled=true;
+    try{await window.FB.login(em,pw);if(!(await window.FB.isOwner())){await window.FB.logout();throw 0}location.hash='admin';location.reload()}
+    catch(e){err(L('البريد أو كلمة المرور غير صحيحة، أو هذا الحساب ليس حساب المدير.','Incorrect email or password, or this account is not the admin.'))}
+    finally{$('#alGo').disabled=false}return}
   const err=m=>{$('#alErr').hidden=false;$('#alErr').textContent=m},em=$('#alEmail').value.trim().toLowerCase(),pw=$('#alPass').value;
   if(Date.now()<ALS.lockUntil)return err(L('محاولات كثيرة. حاول مرة أخرى بعد دقيقة.','Too many attempts. Try again in a minute.'));
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return err(L('أدخل بريداً إلكترونياً صحيحاً.','Enter a valid email address.'));
@@ -2086,8 +2107,8 @@ async function alSubmit(){
   }catch(e){err(L('تعذّر الحفظ. تحقق من الاتصال وحاول مرة أخرى.','Could not save. Check your connection and try again.'))}
   finally{$('#alGo').disabled=false}
 }
-function adminLogout(){admSetSession(false);closeAdmin();['#admKpis','#admWeek','#admDev','#admSrc','#admGeo','#admThreads','#admConvH','#admMsgs','#admLeads','#admVisits'].forEach(q=>$(q).innerHTML='')}
-function showAdminPanel(){const d=$('#admin');A.open=true;if(d.showModal){try{d.showModal()}catch(e){d.setAttribute('open','')}}else d.setAttribute('open','');renderAdmin()}
+function adminLogout(){if(window.FB_MODE){window.FB.logout().then(()=>{location.hash='';location.reload()});return}admSetSession(false);closeAdmin();['#admKpis','#admWeek','#admDev','#admSrc','#admGeo','#admThreads','#admConvH','#admMsgs','#admLeads','#admVisits'].forEach(q=>$(q).innerHTML='')}
+function showAdminPanel(){const d=$('#admin');A.open=true;{const st=document.querySelector('#admin .setup');if(st)st.hidden=!!window.FB_MODE}if(d.showModal){try{d.showModal()}catch(e){d.setAttribute('open','')}}else d.setAttribute('open','');renderAdmin()}
 function closeAdmin(){const d=$('#admin');A.open=false;d.close?d.close():d.removeAttribute('open')}
 
 (async function initLive(){
@@ -2095,12 +2116,14 @@ function closeAdmin(){const d=$('#admin');A.open=false;d.close?d.close():d.remov
   let db=null,user=null;try{[db,user]=await Promise.all([claude.use('db'),claude.use('user')])}catch(e){}
   LIVE.db=db;LIVE.user=user;
   if(user){try{LIVE.owner=await user.isOwner();LIVE.uid=await user.id()}catch(e){}}
+  if(window.FB_MODE&&!LIVE.owner&&location.hash==='#admin')setTimeout(openAdmin,300);
   if(!db||!LIVE.uid){chatFallback();return}
   if(LIVE.owner){LIVE.ok=true;startAdmin();if(location.hash==='#admin')openAdmin();return}
   await recordVisit();
   if(LIVE.ok)startCustomerChat();
 })();
 
+addEventListener('hashchange',()=>{if(location.hash==='#admin'&&(LIVE.owner||window.FB_MODE))openAdmin()});
 document.addEventListener('click',e=>{
   if(e.target.closest('#cwClose')){cwOpen=false;$('#cw').hidden=true;return}
   if(e.target.closest('#cwCopy')){const n=$('#cwWa').textContent;const done=()=>{$('#cwCopy').textContent=L('تم النسخ','Copied')};
