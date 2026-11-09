@@ -202,6 +202,12 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:col
 .setup small{color:var(--muted)}
 @media (max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr 1fr}}
 @media (max-width:700px){.charts{grid-template-columns:1fr}.inbox{grid-template-columns:1fr;height:auto}.threads{max-height:220px;border-inline-end:0;border-bottom:1px solid var(--line)}.conv .msgs{min-height:320px}.adm{width:100vw;height:100vh;border-radius:0}}
+/* WhatsApp button */
+.wa-btn{background:#25D366!important;color:#FFFFFF!important;text-decoration:none;box-shadow:0 14px 30px -10px rgba(37,211,102,.6)!important}
+.wa-btn:hover{background:#1EBE5A!important}
+.wa-btn:focus-visible{outline:3px solid #0F172A;outline-offset:3px}
+.wa-link{text-decoration:none;color:inherit}
+.wa-link:hover b{color:#1EBE5A}
 /* admin login */
 .alog{border:0;padding:0;width:min(420px,calc(100vw - 32px));border-radius:18px;background:#fff;color:var(--ink);overflow:hidden}
 .alog::backdrop{background:rgba(3,10,24,.65)}
@@ -900,7 +906,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
         <h2 style="font-size:clamp(1.7rem,3.2vw,2.5rem);margin-top:.4rem" data-k="ctH"></h2>
         <p style="color:var(--muted);margin-top:1rem" data-k="ctP"></p>
         <div class="info">
-          <div><small>WhatsApp</small><b class="ltr">+90 535 220 22 94</b></div>
+          <div><small>WhatsApp</small><a class="ltr wa-link" href="https://wa.me/905352202294" target="_blank" rel="noopener"><b>+90 535 220 22 94</b></a></div>
           <div><small data-k="email"></small><b class="ltr">palentweb@gmail.com</b></div>
           <div><small data-k="hours"></small><span data-k="hoursV"></span></div>
         </div>
@@ -921,7 +927,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
   </section>
 </main>
 
-<button type="button" class="cw-btn" id="cwBtn" aria-controls="cw"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></svg><span data-k="cwBtn"></span><span class="cw-dot" id="cwDot" hidden></span></button>
+<a class="cw-btn wa-btn" id="cwBtn" href="https://wa.me/905352202294" target="_blank" rel="noopener" aria-label="WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 01-13.2 7.9L3 21l1.2-4.6A9 9 0 1121 12z"/><path d="M9 8.5c0 3.3 3.2 6.5 6.5 6.5l1.2-1.6-2-1-1 .9c-1-.4-2.3-1.7-2.7-2.7l.9-1-1-2L9.3 7.8"/></svg><span data-k="cwBtn"></span><span class="cw-dot" id="cwDot" hidden></span></a>
 <section class="cw" id="cw" hidden aria-label="Live chat">
   <div class="cw-h"><span class="av av-logo"><svg viewBox="0 0 160 160" aria-hidden="true"><rect width="160" height="160" rx="36" fill="#0F172A"/><rect x="52" y="40" width="20" height="84" rx="4" fill="#FFFFFF"/><path d="M62 50 H92 A24 24 0 0 1 92 98 H62" fill="none" stroke="#22D3EE" stroke-width="20"/><circle cx="134" cy="52" r="9" fill="#22D3EE"/><circle cx="134" cy="52" r="18" fill="none" stroke="#22D3EE" stroke-width="2" opacity=".5"/></svg></span><div><b data-k="cwTitle"></b><small><i class="on"></i> <span data-k="cwSub"></span></small></div><button type="button" id="cwClose" class="x" aria-label="Close">×</button></div>
   <div id="cwLive" class="cw-live" hidden>
@@ -1007,7 +1013,7 @@ ar:{
  alEmail:'البريد الإلكتروني',alPass:'كلمة المرور',alPass2:'تأكيد كلمة المرور',alOut:'تسجيل الخروج',
  admBtn:'لوحة التحكم',admT:'لوحة التحكم',admLive:'مباشر',admW:'الزيارات في آخر ٧ أيام',admDevH:'الأجهزة',admSrcH:'من أين جاء الزوار',admGeoH:'الدول',admHrH:'ساعات الدخول خلال اليوم',admOsH:'نظام الجهاز',admBrH:'المتصفح',admTabC:'المحادثات',admTabL:'طلبات التواصل',admTabV:'سجل الزيارات',admSend:'إرسال',admPh:'اكتب ردك… (Enter للإرسال)',
  setH:'لتشغيل الشات والإحصائيات على موقعك الحقيقي',set1:'أنشئ حساباً مجانياً على Tawk.to، وانسخ رقم الموقع (Property ID) من الإعدادات.',set2:'أنشئ حساب Google Analytics وانسخ رقم القياس الذي يبدأ بـ G-.',set3:'ضع الرقمين في SITE_CONFIG داخل ملف الموقع ثم ارفعه على استضافتك. سيظهر الشات للزبائن، وتصلك رسائلهم على تطبيق Tawk في جوالك.',setNote:'هذه اللوحة تعمل داخل هذه الصفحة لك وللأشخاص الذين تشاركها معهم كمحررين. الزوار القادمون من رابط عام لا يستطيعون الكتابة هنا.',
- cwBtn:'تحدث معنا',cwTitle:'فريق palentweb',cwSub:'متصلون · نرد خلال دقائق',cwNameL:'اسمك (اختياري)',cwSend:'إرسال',cwPh:'اكتب رسالتك…',cwFb:'الشات المباشر غير متاح في هذه المعاينة. تواصل معنا الآن عبر واتساب:',cwCopy:'نسخ الرقم',cwFb2:'سيعمل الشات المباشر تلقائياً بعد نشر الموقع على استضافتك.',scrollCue:'اكتشف خدماتنا',reelTag:'فيديو توضيحي',play:'تشغيل',pause:'إيقاف',
+ cwBtn:'تحدث معنا',waMsg:'مرحباً palentweb، أريد الاستفسار عن خدماتكم.',cwTitle:'فريق palentweb',cwSub:'متصلون · نرد خلال دقائق',cwNameL:'اسمك (اختياري)',cwSend:'إرسال',cwPh:'اكتب رسالتك…',cwFb:'الشات المباشر غير متاح في هذه المعاينة. تواصل معنا الآن عبر واتساب:',cwCopy:'نسخ الرقم',cwFb2:'سيعمل الشات المباشر تلقائياً بعد نشر الموقع على استضافتك.',scrollCue:'اكتشف خدماتنا',reelTag:'فيديو توضيحي',play:'تشغيل',pause:'إيقاف',
  reel:[['تصميم المتجر','واجهة بهوية علامتك، صفحات منتجات مقنعة، ونسخة جاهزة للجوال'],['بوابات الدفع','فيزا وماستركارد وباي بال وApple Pay، بدفع آمن في خطوة واحدة'],['صفحات السوشيال ميديا','فيسبوك وإنستقرام وسناب شات وتيك توك وGoogle Ads مربوطة بمتجرك'],['إدارة الإعلانات','حملات على Meta وTikTok وSnapchat وGoogle مع تقارير أداء أسبوعية'],['طلبات من كل العالم','عملاؤك يطلبون من أي دولة، ويدفعون بعملتهم']],
  trust:[['٨','خدمات متكاملة'],['١٨','بوابة ووسيلة دفع'],['٧–٢١','يوم عمل للتسليم'],['AR / EN','دعم باللغتين']],
  inEye:'مجالات نعمل بها',inH:'نبني لكل أنواع المشاريع',inP:'مطاعم وكافيهات ومتاجر تبيع كل شيء. وإذا لم تجد مجالك هنا، فنحن نبنيه أيضاً.',inAdd:'ما نضيفه:',inCta:'لم تجد مجالك؟ <b>نبني متجراً لأي نشاط تجاري.</b>',inCtaB:'أخبرنا عن مشروعك',
@@ -1058,7 +1064,7 @@ en:{
  alEmail:'Email',alPass:'Password',alPass2:'Confirm password',alOut:'Log out',
  admBtn:'Admin',admT:'Admin panel',admLive:'Live',admW:'Visits, last 7 days',admDevH:'Devices',admSrcH:'Where visitors came from',admGeoH:'Countries',admHrH:'Visits by hour of day',admOsH:'Operating system',admBrH:'Browser',admTabC:'Chats',admTabL:'Contact requests',admTabV:'Visit log',admSend:'Send',admPh:'Type your reply… (Enter to send)',
  setH:'To run chat and analytics on your live site',set1:'Create a free Tawk.to account and copy the Property ID from its settings.',set2:'Create a Google Analytics property and copy the measurement ID that starts with G-.',set3:'Put both IDs in SITE_CONFIG inside the site file, then upload it to your hosting. Customers will see the chat, and their messages reach the Tawk app on your phone.',setNote:'This panel works inside this page for you and anyone you share it with as an editor. Visitors from a public link cannot write here.',
- cwBtn:'Chat with us',cwTitle:'palentweb team',cwSub:'Online · we reply within minutes',cwNameL:'Your name (optional)',cwSend:'Send',cwPh:'Type your message…',cwFb:'Live chat isn’t available in this preview. Reach us on WhatsApp now:',cwCopy:'Copy number',cwFb2:'Live chat turns on automatically once the site is on your hosting.',scrollCue:'Explore our services',reelTag:'Explainer video',play:'Play',pause:'Pause',
+ cwBtn:'Chat with us',waMsg:'Hello palentweb, I would like to ask about your services.',cwTitle:'palentweb team',cwSub:'Online · we reply within minutes',cwNameL:'Your name (optional)',cwSend:'Send',cwPh:'Type your message…',cwFb:'Live chat isn’t available in this preview. Reach us on WhatsApp now:',cwCopy:'Copy number',cwFb2:'Live chat turns on automatically once the site is on your hosting.',scrollCue:'Explore our services',reelTag:'Explainer video',play:'Play',pause:'Pause',
  reel:[['Store design','A storefront in your brand, persuasive product pages, and a mobile-ready version'],['Payment gateways','Visa, Mastercard, PayPal and Apple Pay, with secure one-step checkout'],['Social media pages','Facebook, Instagram, Snapchat, TikTok and Google Ads, connected to your store'],['Ads management','Campaigns on Meta, TikTok, Snapchat and Google with weekly reports'],['Orders from everywhere','Customers order from any country and pay in their own currency']],
  trust:[['8','Integrated services'],['18','Gateways & payment methods'],['7–21','Working days to deliver'],['AR / EN','Bilingual support']],
  inEye:'Industries',inH:'We build for every kind of business',inP:'Restaurants, cafés, and stores that sell anything. If your field isn’t listed, we build that too.',inAdd:'What we add:',inCta:'Don’t see your field? <b>We build stores for any business.</b>',inCtaB:'Tell us about your project',
@@ -1731,6 +1737,7 @@ function render(){
   const keepSel=(id,opts)=>{const el=$(id),i=el.selectedIndex;el.innerHTML=opts.map(o=>`<option>${esc(o)}</option>`).join('');el.selectedIndex=Math.max(0,i)};
   $('#ffield').placeholder=t.fFieldPh;
   keepSel('#fpkg',[t.pkgNone,...PKGS().map(([sv,k])=>{const x=SERVICES.find(z=>z.id===sv)[lang].tiers[k];return x.n+' — '+x.p})]);
+  {const wa='https://wa.me/905352202294?text='+encodeURIComponent(t.waMsg);$('#cwBtn').href=wa;document.querySelectorAll('.wa-link').forEach(a=>a.href=wa)}
   $('#fname').placeholder=t.fNamePh;$('#cwText').placeholder=t.cwPh;$('#admText').placeholder=t.admPh; $('#fcountry').placeholder=t.fCountryPh; $('#fmsg').placeholder=t.fMsgPh;
   if(!$('#ok').hidden) $('#ok').hidden=true;
 }
@@ -2089,13 +2096,12 @@ function closeAdmin(){const d=$('#admin');A.open=false;d.close?d.close():d.remov
   LIVE.db=db;LIVE.user=user;
   if(user){try{LIVE.owner=await user.isOwner();LIVE.uid=await user.id()}catch(e){}}
   if(!db||!LIVE.uid){chatFallback();return}
-  if(LIVE.owner){LIVE.ok=true;startAdmin();$('#cwBtn').hidden=true;if(location.hash==='#admin')openAdmin();return}
+  if(LIVE.owner){LIVE.ok=true;startAdmin();if(location.hash==='#admin')openAdmin();return}
   await recordVisit();
   if(LIVE.ok)startCustomerChat();
 })();
 
 document.addEventListener('click',e=>{
-  if(e.target.closest('#cwBtn')){cwOpen=!$('#cw').hidden?false:true;$('#cw').hidden=!cwOpen;if(cwOpen){renderCW();custMarkRead();setTimeout(()=>{const t=$('#cwText');if(t&&!$('#cwLive').hidden)t.focus()},50)}return}
   if(e.target.closest('#cwClose')){cwOpen=false;$('#cw').hidden=true;return}
   if(e.target.closest('#cwCopy')){const n=$('#cwWa').textContent;const done=()=>{$('#cwCopy').textContent=L('تم النسخ','Copied')};
     if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(n).then(done,()=>{getSelection().selectAllChildren($('#cwWa'))});else getSelection().selectAllChildren($('#cwWa'));return}
