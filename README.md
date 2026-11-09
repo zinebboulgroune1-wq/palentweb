@@ -15,13 +15,20 @@
 2. **Settings ← Pages ← Deploy from a branch**، اختر `main` و `/ (root)` ثم **Save**.
 3. بعد دقيقة يعمل الموقع على `https://zolzoX.github.io/palentweb/`.
 
+## نشر الموقع على Railway (بديل GitHub Pages)
+1. في railway.app: **New Project ← Deploy from GitHub repo** واختر مستودع `palentweb`.
+2. ملف `package.json` يشغّل الموقع تلقائياً، فلا تحتاج أي إعداد إضافي.
+3. من **Settings ← Networking** اضغط **Generate Domain**، فتحصل على رابط مثل `palentweb-production.up.railway.app`.
+4. أضف هذا الرابط (بدون https) في Firebase ← **Authentication ← Settings ← Authorized domains**.
+5. لوحة التحكم: `https://رابطك.up.railway.app/#admin`
+
 ## 2) تشغيل لوحة التحكم بـFirebase (مجاني، نحو ١٠ دقائق)
 1. ادخل **console.firebase.google.com** ← **Add project**، سمّه `palentweb`، وأكمل الخطوات.
 2. **Build ← Authentication ← Get started**، ثم من تبويب **Sign-in method** فعّل:
    - **Email/Password**
    - **Anonymous** (لتسجيل الزوار بدون حساب)
 3. في تبويب **Users** اضغط **Add user**: اكتب `palentweb@gmail.com` وكلمة مرور قوية. هذا حساب المدير.
-4. في تبويب **Settings ← Authorized domains** أضف: `zolzoX.github.io` (ودومينك الخاص إن ربطته).
+4. في تبويب **Settings ← Authorized domains** أضف دومين موقعك: `zolzoX.github.io` أو رابط Railway، ودومينك الخاص إن ربطته.
 5. **Build ← Firestore Database ← Create database**، اختر أقرب موقع لك، ثم **Production mode**.
 6. في تبويب **Rules** احذف الموجود، والصق محتوى ملف `firestore.rules`، ثم **Publish**.
 7. **Project settings** (أيقونة الترس) ← **Your apps** ← أيقونة الويب `</>` ← سمّ التطبيق ← **Register app**.
@@ -29,7 +36,7 @@
 8. ارفع `firebase-config.js` المعدّل إلى GitHub مكان القديم.
 
 ## 3) فتح لوحة التحكم
-افتح `https://zolzoX.github.io/palentweb/#admin` وادخل بالبريد وكلمة المرور من الخطوة 3.
+افتح رابط موقعك وفي آخره `#admin`، مثل `https://zolzoX.github.io/palentweb/#admin` أو `https://رابطك.up.railway.app/#admin`، وادخل بالبريد وكلمة المرور من الخطوة 3.
 بعد الدخول يظهر زر «لوحة التحكم» في أعلى الموقع، وزر «تسجيل الخروج» داخل اللوحة.
 لتغيير كلمة المرور: Firebase ← Authentication ← Users.
 
