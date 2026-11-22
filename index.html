@@ -1,17 +1,4 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="palentweb · تصميم المتاجر الإلكترونية، Shopify، بوابات الدفع، السوشيال ميديا، الإعلانات، تطبيقات الجوال وتصميم الشعارات.">
-<meta name="theme-color" content="#0F172A">
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20160%20160%22%3E%3Crect%20width%3D%22160%22%20height%3D%22160%22%20rx%3D%2236%22%20fill%3D%22%230F172A%22/%3E%3Crect%20x%3D%2252%22%20y%3D%2240%22%20width%3D%2220%22%20height%3D%2284%22%20rx%3D%224%22%20fill%3D%22%23fff%22/%3E%3Cpath%20d%3D%22M62%2050%20H92%20A24%2024%200%200%201%2092%2098%20H62%22%20fill%3D%22none%22%20stroke%3D%22%2322D3EE%22%20stroke-width%3D%2220%22/%3E%3Ccircle%20cx%3D%22134%22%20cy%3D%2252%22%20r%3D%229%22%20fill%3D%22%2322D3EE%22/%3E%3C/svg%3E">
-<style>body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}</style>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="firebase-config.js"></script>
-<script src="firebase-shim.js"></script>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>palentweb</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -716,9 +703,6 @@ footer{border-top:1px solid var(--line);padding-block:2rem;color:var(--muted);fo
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
-</head>
-<body>
-
 
 <header>
   <div class="wrap nav">
@@ -1111,9 +1095,13 @@ en:{
 
 const SERVICES=[
  {id:'store',icon:I.store,
-  ar:{n:'تصميم متجر إلكتروني متكامل',d:'متجر كامل بهوية خاصة بعلامتك، جاهز للبيع محلياً ودولياً لأي نوع من المشاريع: مطاعم وكافيهات، أزياء وعطور، إلكترونيات، سوبرماركت، منتجات رقمية، ومتاجر تبيع كل شيء.',t:'٧ – ١٤ يوم عمل',p:'$1,499',x:['عقد متابعة سنوي (اختياري)','$35','شهرياً لمدة ١٢ شهراً'],f:'جميع أنواع المشاريع: مطاعم، كافيهات، ومتاجر لكل المنتجات',
+  ar:{n:'تصميم متجر إلكتروني متكامل',d:'متجر كامل بهوية خاصة بعلامتك، جاهز للبيع محلياً ودولياً لأي نوع من المشاريع: مطاعم وكافيهات، أزياء وعطور، إلكترونيات، سوبرماركت، منتجات رقمية، ومتاجر تبيع كل شيء.',t:'٧ – ١٤ يوم عمل',p:'$1,499',x:['عقد متابعة سنوي (اختياري)','$35','شهرياً لمدة ١٢ شهراً'],
+   tiers:[{n:'المتجر المتكامل · دفعة واحدة',p:'$1,499',i:['تصميم متجر كامل بهوية خاصة','رفع حتى ٣٠٠ منتج','بوابات دفع عالمية ومحلية','لغتان وعدة عملات','إنشاء ٥ حسابات سوشيال ميديا','إدارة الإعلانات لمدة شهر','دعم فني لمدة ٣ أشهر','عقد متابعة سنوي اختياري: $35 شهرياً']},
+    {n:'المتجر الخاص · اشتراك شهري',p:'$119 / شهرياً',pop:'شهرياً فقط',i:['تصميم متجر كامل بهوية خاصة','رفع حتى ٣٠٠ منتج','بوابات دفع عالمية ومحلية','لغتان وعدة عملات','إنشاء ٥ حسابات سوشيال ميديا','إدارة الإعلانات لمدة شهر','دعم فني لمدة ٣ أشهر','اشتراك شهري فقط: $119 في الشهر']}],f:'جميع أنواع المشاريع: مطاعم، كافيهات، ومتاجر لكل المنتجات',
    i:['شراء الدومين المناسب لعلامتك وربطه بالمتجر','تصميم واجهة خاصة بهويتك','صفحات منتجات وتصنيفات مقنعة','سلة وصفحة دفع سريعة','ربط بوابات الدفع المتوفرة في بلدك','إعداد الشحن والضرائب لكل دولة','إضافة جميع لغات العالم مع ترجمة تلقائية','تعدد العملات حسب دولة الزائر','تحسين محركات البحث وسرعة التحميل','تقارير الزوار: نوع الجهاز، الدولة والمدينة، ومن أي منصة دخلوا','تركيب Google Analytics وبكسلات الإعلانات','رسائل بريد تلقائية للعملاء وللإدارة مع كل طلب','لوحة تحكم سهلة وتدريب فريقك']},
-  en:{n:'Full e-commerce store design',d:'A complete store with its own brand identity, ready to sell at home and abroad for any kind of business: restaurants and cafés, fashion and beauty, electronics, groceries, digital products, and stores that sell everything.',t:'7 – 14 working days',p:'$1,499',x:['Optional 1-year follow-up contract','$35','per month for 12 months'],f:'Every kind of business: restaurants, cafés and stores selling anything',
+  en:{n:'Full e-commerce store design',d:'A complete store with its own brand identity, ready to sell at home and abroad for any kind of business: restaurants and cafés, fashion and beauty, electronics, groceries, digital products, and stores that sell everything.',t:'7 – 14 working days',p:'$1,499',x:['Optional 1-year follow-up contract','$35','per month for 12 months'],
+   tiers:[{n:'Complete store · one-time',p:'$1,499',i:['Fully custom store design','Up to 300 products uploaded','Global and local payment gateways','Two languages, multiple currencies','Five social media accounts','One month of ad management','Three months of support','Optional 1-year follow-up: $35/month']},
+    {n:'Custom store · monthly plan',p:'$119 / month',pop:'Monthly only',i:['Fully custom store design','Up to 300 products uploaded','Global and local payment gateways','Two languages, multiple currencies','Five social media accounts','One month of ad management','Three months of support','Monthly plan only: $119/month']}],f:'Every kind of business: restaurants, cafés and stores selling anything',
    i:['Buying the right domain and connecting it','Custom UI built around your brand','Persuasive product and collection pages','Fast cart and checkout','Payment gateways available in your country','Shipping and tax rules per country','Every world language, with auto-translation','Currency matched to each visitor’s country','SEO and page-speed optimization','Visitor reports: device, country and city, and which platform they came from','Google Analytics and ad pixel setup','Automatic emails to customers and admin on every order','Easy admin panel and team training']}},
  {id:'shopify',icon:I.bag,
   ar:{n:'متاجر Shopify',d:'إطلاق متجر Shopify من الصفر أو تطوير متجرك الحالي، مع تفعيل Shopify Markets للبيع لعدة دول بعملاتها.',t:'٥ – ١٠ أيام عمل',p:'$499',x:['دعم شهري اختياري للباقتين الأساسية والاحترافية','$50','شهرياً'],
@@ -2333,5 +2321,4 @@ $('#lead').addEventListener('submit',e=>{
 })();
 </script>
 
-</body>
-</html>
+</body></html>
