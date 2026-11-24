@@ -1,51 +1,56 @@
-# palentweb · حلول التجارة الإلكترونية
+# palentweb على Railway: الموقع + لوحة التحكم
 
-موقع palentweb بالعربية والإنجليزية، مع لوحة تحكم تعمل عبر Firebase: الزوار (البلد والساعة والجهاز)، وطلبات التواصل، وحجوزات الاستشارة.
+هذا المجلد فيه الموقع كاملاً مع خادم صغير يسجّل الزوار ومصادرهم والطلبات والمواعيد، ولوحة تحكم احترافية على الرابط `/admin`.
 
-## الملفات
-| الملف | الوظيفة |
+## ماذا يوجد في المجلد
+
+| الملف | ما هو |
 |---|---|
-| `index.html` | الموقع كاملاً |
-| `firebase-config.js` | تضع فيه بيانات مشروع Firebase وبريد المدير |
-| `firebase-shim.js` | يربط الموقع ولوحة التحكم بـFirebase (لا تعدّله) |
-| `firestore.rules` | قواعد الحماية: لا يقرأ البيانات إلا المدير |
+| `public/index.html` | الموقع نفسه (كل الصفحات والفيديو والمعاينات). |
+| `admin/admin.html` | لوحة التحكم. لا تفتح إلا بعد تسجيل الدخول. |
+| `server.js` | الخادم: يعرض الموقع، يحفظ الزيارات والطلبات والمواعيد، ويحمي لوحة التحكم. بدون أي مكتبات خارجية. |
+| `package.json` و `railway.json` | إعدادات التشغيل على Railway. |
+| `.env.example` | أسماء المتغيرات التي تضيفها في Railway (لا تضع فيه كلمة مرورك الحقيقية). |
 
-## 1) نشر الموقع على GitHub Pages
-1. ارفع الملفات الخمسة إلى مستودع `palentweb`.
-2. **Settings ← Pages ← Deploy from a branch**، اختر `main` و `/ (root)` ثم **Save**.
-3. بعد دقيقة يعمل الموقع على `https://zolzoX.github.io/palentweb/`.
+## خطوات النشر على Railway
 
-## نشر الموقع على Railway (بديل GitHub Pages)
-1. في railway.app: **New Project ← Deploy from GitHub repo** واختر مستودع `palentweb`.
-2. ملف `package.json` يشغّل الموقع تلقائياً، فلا تحتاج أي إعداد إضافي.
-3. من **Settings ← Networking** اضغط **Generate Domain**، فتحصل على رابط مثل `palentweb-production.up.railway.app`.
-4. أضف هذا الرابط (بدون https) في Firebase ← **Authentication ← Settings ← Authorized domains**.
-5. لوحة التحكم: `https://رابطك.up.railway.app/#admin`
+1. **ارفع المجلد على GitHub**: أنشئ مستودعاً جديداً (مثلاً `palentweb-site`) وارفع كل محتويات هذا المجلد كما هي، مع المجلدين `public` و `admin`.
+2. **افتح Railway**: من railway.com اختر **New Project** ثم **Deploy from GitHub repo** واختر المستودع. سيبدأ التشغيل تلقائياً.
+3. **أضف المتغيرات**: افتح الخدمة ثم **Variables** وأضف:
+   - `ADMIN_EMAIL`: بريد دخول لوحة التحكم.
+   - `ADMIN_PASSWORD`: كلمة مرور قوية (١٢ حرفاً أو أكثر).
+   - `SESSION_SECRET`: نص عشوائي طويل (٣٢ حرفاً أو أكثر). يبقيك مسجلاً بعد إعادة التشغيل.
+4. **أضف مساحة تخزين (مهم جداً)**: من داخل المشروع أضف **Volume** واربطه بالخدمة على المسار `/data`. بدونها تُمسح الزيارات والطلبات عند كل تحديث للموقع. Railway يخبر الخادم بمكانها تلقائياً.
+5. **احصل على الرابط**: من **Settings ← Networking** اضغط **Generate Domain**، أو اربط دومينك الخاص من **Custom Domain**.
+6. **جرّب**:
+   - الموقع: `https://رابطك/`
+   - لوحة التحكم: `https://رابطك/admin` (أو زر "دخول الفريق" في الموقع).
 
-## 2) تشغيل لوحة التحكم بـFirebase (مجاني، نحو ١٠ دقائق)
-1. ادخل **console.firebase.google.com** ← **Add project**، سمّه `palentweb`، وأكمل الخطوات.
-2. **Build ← Authentication ← Get started**، ثم من تبويب **Sign-in method** فعّل:
-   - **Email/Password**
-   - **Anonymous** (لتسجيل الزوار بدون حساب)
-3. في تبويب **Users** اضغط **Add user**: اكتب `palentweb@gmail.com` وكلمة مرور قوية. هذا حساب المدير.
-4. في تبويب **Settings ← Authorized domains** أضف دومين موقعك: `zolzoX.github.io` أو رابط Railway، ودومينك الخاص إن ربطته.
-5. **Build ← Firestore Database ← Create database**، اختر أقرب موقع لك، ثم **Production mode**.
-6. في تبويب **Rules** احذف الموجود، والصق محتوى ملف `firestore.rules`، ثم **Publish**.
-7. **Project settings** (أيقونة الترس) ← **Your apps** ← أيقونة الويب `</>` ← سمّ التطبيق ← **Register app**.
-   انسخ القيم الظاهرة (apiKey و authDomain و projectId و storageBucket و messagingSenderId و appId) إلى ملف `firebase-config.js`.
-8. ارفع `firebase-config.js` المعدّل إلى GitHub مكان القديم.
+## ماذا تعرض لوحة التحكم
 
-## 3) فتح لوحة التحكم
-افتح رابط موقعك وفي آخره `#admin`، مثل `https://zolzoX.github.io/palentweb/#admin` أو `https://رابطك.up.railway.app/#admin`، وادخل بالبريد وكلمة المرور من الخطوة 3.
-بعد الدخول يظهر زر «لوحة التحكم» في أعلى الموقع، وزر «تسجيل الخروج» داخل اللوحة.
-لتغيير كلمة المرور: Firebase ← Authentication ← Users.
+- **نظرة عامة**: الزوار الفريدون، الزيارات، مشاهدات الصفحات، الطلبات، المواعيد، ونسبة التحويل، مع المقارنة بالفترة السابقة. رسم بياني للزيارات اليومية، ومن أين جاء الزوار (Google، Instagram، TikTok، Facebook، WhatsApp، مباشر…)، والدول، والأجهزة، وساعات الذروة، وأكثر الصفحات زيارة.
+- **الطلبات**: كل طلب من نموذج "أرسل طلبك" مع الخدمات والرسالة ومصدر الزائر. بحث، تصفية حسب الحالة (جديد / تم التواصل / تم الاتفاق / لم يتم)، ملاحظات داخلية، زر واتساب جاهز، وتصدير CSV.
+- **المواعيد**: الاستشارات المحجوزة مرتبة حسب اليوم، مع تقويم ١٤ يوماً، وأزرار "مؤكد" و"تم" وواتساب، وتصدير CSV.
+- **الزوار**: تفاصيل المصادر والدول وأنظمة التشغيل والمتصفحات واللغة والحملات (`utm_campaign`).
+- تتحدث اللوحة كل ٣٠ ثانية وتنبّهك عند وصول طلب أو موعد جديد. تعمل بالعربي والإنجليزي، ليلي ونهاري، وعلى الجوال.
 
-> بيانات `firebase-config.js` ليست سرية، فهي مصممة لتكون ظاهرة في المواقع. الحماية الحقيقية في قواعد `firestore.rules`.
-> إذا تركت `apiKey` فارغاً يعمل الموقع عادياً بدون لوحة التحكم، وزر واتساب يعمل دائماً.
+## معرفة مصدر الزوار من إعلاناتك
 
----
+أضف إلى روابطك في البايو والإعلانات:
 
-# palentweb · E-commerce solutions (English)
-1. Upload the five files and enable **Settings → Pages → main / root**.
-2. In Firebase: enable **Email/Password** and **Anonymous** sign-in, add the admin user `palentweb@gmail.com`, add `zolzoX.github.io` to **Authorized domains**, create **Firestore** (production) and paste `firestore.rules`, register a **Web app** and copy its config into `firebase-config.js`.
-3. Open `/#admin` and log in with the admin account.
+- إنستغرام: `https://رابطك/?utm_source=instagram&utm_campaign=bio`
+- تيك توك: `https://رابطك/?utm_source=tiktok&utm_campaign=bio`
+- فيسبوك: `https://رابطك/?utm_source=facebook&utm_campaign=bio`
+
+بهذا تظهر كل منصة وكل حملة بشكل منفصل في اللوحة.
+
+## تحديث الموقع لاحقاً
+
+استبدل `public/index.html` في المستودع بالنسخة الجديدة. Railway يعيد النشر تلقائياً، والبيانات تبقى محفوظة في الـ Volume.
+
+## ملاحظات
+
+- الخادم يتجاهل الزيارات الآلية (محركات البحث والروبوتات) حتى لا تضخّم الأرقام.
+- كلمة المرور لا تُحفظ في أي ملف. تبقى فقط في متغيرات Railway.
+- عدة محاولات دخول خاطئة تقفل الدخول ١٥ دقيقة.
+- إذا أردت إبقاء الموقع على GitHub Pages وتشغيل الخادم فقط على Railway: ضع رابط Railway في `apiBase` داخل `SITE_CONFIG` في `index.html`، وأضف رابط موقعك في المتغير `ALLOWED_ORIGINS`. الأسهل والأفضل أن يكون كل شيء على Railway.

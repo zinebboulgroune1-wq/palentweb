@@ -1,14 +1,9 @@
 {
-  "name": "palentweb",
+  "name": "palentweb-site",
+  "version": "1.0.0",
   "private": true,
-  "description": "palentweb website",
-  "scripts": {
-    "start": "serve . --no-clipboard -l tcp://0.0.0.0:${PORT:-3000}"
-  },
-  "dependencies": {
-    "serve": "14.2.4"
-  },
-  "engines": {
-    "node": ">=18"
-  }
+  "description": "palentweb website with admin dashboard (visitors, sources, requests, bookings)",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
 }
