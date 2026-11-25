@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>palentweb</title>
+<title>palentweb</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160'%3E%3Crect width='160' height='160' rx='36' fill='%230F172A'/%3E%3Crect x='52' y='40' width='20' height='84' rx='4' fill='%23fff'/%3E%3Cpath d='M62 50H92a24 24 0 0 1 0 48H62' fill='none' stroke='%2322D3EE' stroke-width='20'/%3E%3Ccircle cx='134' cy='52' r='9' fill='%2322D3EE'/%3E%3C/svg%3E"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"><link rel="manifest" href="site.webmanifest"><meta name="theme-color" content="#08080B">
 <script>(function(){try{var t=localStorage.getItem('pw-theme');if(t?t==='light':matchMedia('(prefers-color-scheme: light)').matches)document.documentElement.classList.add('light')}catch(e){}})()</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1742,6 +1742,7 @@ html.light .d-mesh{opacity:.35}
 .socl-lg{margin-top:8px}
 .socl-lg a{height:40px;padding:0 14px}
 #contact .info .ct-soc{grid-column:1/-1}
+@media (max-width:860px){.tbar{background:transparent!important;border:2px solid var(--ac)!important;border-radius:var(--r2)!important}}
 #contact .info .socl{display:flex!important;flex-direction:row!important;flex-wrap:wrap;gap:8px}
 #contact .info .socl a{width:auto!important;flex:0 0 auto}
 </style>
@@ -3144,7 +3145,23 @@ function endIntro(){
 
 /* ---------- live data: visits, leads, chat, admin panel ---------- */
 /* For the live site on your own hosting: paste your free Tawk.to IDs and Google Analytics ID here. */
-const SITE_CONFIG={tawkPropertyId:'',tawkWidgetId:'default',gaMeasurementId:''};
+const SITE_CONFIG={tawkPropertyId:'',tawkWidgetId:'default',gaMeasurementId:'',apiBase:''};
+/* ---- palentweb server on Railway: visitors, requests, bookings ---- */
+const PWAPI={on:false,base:String(SITE_CONFIG.apiBase||'').replace(/\/$/,''),id:null};
+function pwIds(){if(PWAPI.id)return PWAPI.id;let vid='',sid='',newv=false;
+  try{vid=localStorage.getItem('pw-vid')||'';if(!vid){vid=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('pw-vid',vid);newv=true}
+      sid=sessionStorage.getItem('pw-sid')||'';if(!sid){sid=Math.random().toString(36).slice(2)+Date.now().toString(36);sessionStorage.setItem('pw-sid',sid)}}catch(e){}
+  return PWAPI.id={vid,sid,newv}}
+function pwPost(p,body){if(!PWAPI.on)return Promise.resolve(null);
+  return fetch(PWAPI.base+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),keepalive:true}).catch(()=>null)}
+async function pwInit(){if(location.protocol==='file:'&&!PWAPI.base)return;
+  try{const r=await fetch(PWAPI.base+'/api/health',{cache:'no-store'});if(!r.ok)return;const j=await r.json();if(!j||!j.ok)return}catch(e){return}
+  PWAPI.on=true;const id=pwIds(),q=new URLSearchParams(location.search),ua=uaInfo(),w=innerWidth,tz=tzOf(),c=TZC[tz];
+  const device=ua.os==='iPad'||(w>=700&&w<1100&&'ontouchstart' in window)?'Tablet':(ua.os==='iPhone'||ua.os==='Android'||w<700)?'Mobile':'Desktop';
+  const utm={source:q.get('utm_source')||'',medium:q.get('utm_medium')||'',campaign:q.get('utm_campaign')||'',clid:q.get('gclid')?'gclid':q.get('fbclid')?'fbclid':q.get('ttclid')?'ttclid':''};
+  pwPost('/api/track',{t:'visit',vid:id.vid,sid:id.sid,newv:id.newv,path:location.hash.startsWith('#/')?location.hash:'#/home',ref:document.referrer,utm,lang,tz,country:c?c[1]:'',device,os:ua.os,br:ua.br});
+  addEventListener('hashchange',()=>{if(location.hash.startsWith('#/'))pwPost('/api/track',{t:'view',vid:id.vid,sid:id.sid,path:location.hash})});
+}
 const LIVE={db:null,user:null,uid:null,owner:false,ok:false};
 const devType=()=>{const ua=navigator.userAgent;return /iPad|Tablet/i.test(ua)?'tablet':/Mobi|Android|iPhone/i.test(ua)?'mobile':'desktop'};
 function srcOf(){let q='';try{q=new URLSearchParams(location.search).get('utm_source')||''}catch(e){}
@@ -3356,7 +3373,7 @@ function showAdminPanel(){const d=$('#admin');A.open=true;{const st=document.que
 function closeAdmin(){const d=$('#admin');A.open=false;d.close?d.close():d.removeAttribute('open')}
 
 (async function initLive(){
-  if(!(window.claude&&claude.use)){chatFallback();loadExternal();return}
+  if(!(window.claude&&claude.use)){chatFallback();loadExternal();pwInit();return}
   let db=null,user=null;try{[db,user]=await Promise.all([claude.use('db'),claude.use('user')])}catch(e){}
   LIVE.db=db;LIVE.user=user;
   if(user){try{LIVE.owner=await user.isOwner();LIVE.uid=await user.id()}catch(e){}}
@@ -3586,6 +3603,7 @@ $('#csForm').addEventListener('submit',e=>{
   ok.classList.remove('err');const d=csDays()[CS.day],dl=new Intl.DateTimeFormat(lang==='ar'?'ar':'en',{weekday:'long',day:'numeric',month:'long'}).format(d);
   ok.textContent=t.csOkF(n,dl,CS.time);
   recordLead({at:Date.now(),name:n.slice(0,80),phone:p.slice(0,40),country:'',platform:'',services:[t.csSvc],field:'',budget:'',pkg:'',sup:false,msg:`${t.csMsgL}: ${dl} ${CS.time} (${tzOf()})`});
+  pwPost('/api/booking',{name:n,phone:p,date:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),dateLabel:dl,time:CS.time,tz:tzOf(),lang,vid:pwIds().vid});
 });
 $('#lead').addEventListener('submit',e=>{
   e.preventDefault();
@@ -3596,6 +3614,7 @@ $('#lead').addEventListener('submit',e=>{
   if(pk.selectedIndex>0)m+=' '+t.pkgL+pk.value+($('#fsup').checked?t.supL:'');
   ok.textContent=m;
   recordLead({at:Date.now(),name:n.slice(0,80),phone:p.slice(0,40),country:$('#fcountry').value.trim().slice(0,60),platform:'',services:[...document.querySelectorAll('#pick input:checked')].map(i=>i.parentElement.textContent.trim()),field:$('#ffield').value.trim().slice(0,80),budget:'',pkg:pk.selectedIndex>0?pk.value:'',sup:$('#fsup').checked,msg:$('#fmsg').value.trim().slice(0,2000)});
+  pwPost('/api/lead',{name:n,phone:p,country:$('#fcountry').value.trim(),field:$('#ffield').value.trim(),services:[...document.querySelectorAll('#pick input:checked')].map(i=>i.parentElement.textContent.trim()),pkg:pk.selectedIndex>0?pk.value:'',sup:$('#fsup').checked,msg:$('#fmsg').value.trim(),lang,tz:tzOf(),page:location.hash,vid:pwIds().vid});
 });
 
 /* ===================== palentweb app shell (router, sidebar, pricing, motion) ===================== */
@@ -3672,7 +3691,7 @@ function toTarget(id){const el=document.getElementById(id);if(!el)return false;c
   if(pg)go(pg.dataset.page,{noScroll:true});
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const first=pg&&pg.firstElementChild===el;first?scrollTo({top:0,behavior:RM?'auto':'smooth'}):_siv.call(el,{behavior:RM?'auto':'smooth',block:'start'})}));return true}
 document.addEventListener('click',e=>{
-  const lg=e.target.closest('[data-login]');if(lg){e.preventDefault();closeSb();try{openAdmin()}catch(err){location.hash='#admin'}return}
+  const lg=e.target.closest('[data-login]');if(lg){e.preventDefault();closeSb();if(PWAPI.on){location.href=PWAPI.base+'/admin';return}try{openAdmin()}catch(err){location.hash='#admin'}return}
   const a=e.target.closest('a[href^="#"]');if(!a||e.defaultPrevented)return;const h=a.getAttribute('href');
   if(h==='#admin'||h==='#')return;
   if(h.startsWith('#/')){e.preventDefault();go(h.slice(2));return}
